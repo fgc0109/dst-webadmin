@@ -34,19 +34,19 @@ DSTS.prototype = {
         this.resetLog();
         this.proc.stdout.on('data', function (data) {
             that.emit('stdout', data.toString());
-            that.log.push({time: new Date(), type: 'stdout', msg: data.toString()});
+            that.log.push({ time: new Date(), type: 'stdout', msg: data.toString() });
         });
         this.proc.stderr.on('data', function (data) {
             that.emit('stderr', data.toString());
-            that.log.push({time: new Date(), type: 'stderr', msg: data.toString()});
+            that.log.push({ time: new Date(), type: 'stderr', msg: data.toString() });
         });
 
-        this.proc.on('exit', function() {
+        this.proc.on('exit', function () {
             console.log("DST server stopped");
             that.kill();
         });
     },
-    kill: function() {
+    kill: function () {
         if (!this.proc) return;
         this.proc.kill();
         this.proc = null;
@@ -56,27 +56,27 @@ DSTS.prototype = {
     isStarted: function (cb) {
         cb(!!this.proc);
     },
-    getLog: function(cb) {
+    getLog: function (cb) {
         cb(this.log);
     },
-    resetLog: function() {
+    resetLog: function () {
         this.log = [];
         this.emit('logReset');
     },
-    input: function(msg) {
+    input: function (msg) {
         this.proc.stdin.write(msg + "\n");
         this.emit('stdin', msg);
-        this.log.push({time: new Date(), type: 'stdin', msg: msg});
+        this.log.push({ time: new Date(), type: 'stdin', msg: msg });
     },
-    readIni: function(cb) {
-        fs.readFile(this.iniPath, 'utf-8', function(err, data) {
+    readIni: function (cb) {
+        fs.readFile(this.iniPath, 'utf-8', function (err, data) {
             if (err) {
                 throw err;
             }
             cb(null, ini.parse(data));
         });
     },
-    writeIni: function(object, cb) {
+    writeIni: function (object, cb) {
         fs.writeFile(this.iniPath, ini.encode(object), cb);
     }
 };
