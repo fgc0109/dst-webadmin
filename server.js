@@ -1,11 +1,12 @@
 var express = require('express');
-var app = express();
+var sockets = require('socket.io');
 var http = require('http').Server(app);
-var io = require('socket.io').listen(http);
-var EventEmitter = require('events').EventEmitter;
+var event = require('events').event;
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var ini = require('ini');
+var io = sockets.listen(http);
+var app = express();
 
 app.use(express.static('./public'));
 
@@ -14,7 +15,7 @@ http.listen(8080, function () {
 });
 
 function DSTS() {
-    this.path = '../bin';
+    this.path = '/data/steamapps/dst/bin';
     this.iniPath = (process.env.HOME || process.env.USERPROFILE) + '/.klei/DoNotStarveTogether/settings.ini';
     this.proc = null;
 }
@@ -81,9 +82,9 @@ DSTS.prototype = {
     }
 };
 
-// Inherit from EventEmitter
-for (var key in EventEmitter.prototype) {
-    DSTS.prototype[key] = EventEmitter.prototype[key];
+// Inherit from event
+for (var key in event.prototype) {
+    DSTS.prototype[key] = event.prototype[key];
 }
 
 var dsts = new DSTS();
